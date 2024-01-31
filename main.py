@@ -7,11 +7,6 @@ from tkinter import filedialog
 import customprofile
 import versioncheck
 
-mc_path = os.path.join(os.environ['APPDATA'], '.minecraft')
-verions = os.path.join(mc_path, 'versions' + '\\fabric-loader-0.15.3-1.20.1')
-verions_path = os.path.join(mc_path, 'versions')
-mods_path = os.path.join(mc_path, 'mods')
-
 
 def choose_minecraft_path():
     root = tk.Tk()
@@ -21,8 +16,33 @@ def choose_minecraft_path():
     return mcchecker_path
 
 
+mc_path = choose_minecraft_path()
+verions = os.path.join(mc_path, 'versions' + '\\fabric-loader-0.15.3-1.20.1')
+verions_path = os.path.join(mc_path, 'versions')
+mods_path = os.path.join(mc_path, 'mods')
+modpack_version_path = os.path.join(mc_path, 'modpackversion')
+modpack_version_file = os.path.join(modpack_version_path, 'version.txt')
+
+_version_ = '1.1'
+_version_client_ = '1.0'
+
+
 def check_mc(mc_path):
     if os.path.exists(mc_path):
+        if os.path.exists(modpack_version_file):
+            try:
+                with open(modpack_version_file, "r") as file:
+                    content = file.read()
+                    print(content)
+            except FileNotFoundError:
+                print(f"File not found: {modpack_version_file}")
+            except Exception as e:
+                print(f"An error occurred: {e}")
+        else:
+            os.makedirs(modpack_version_path, exist_ok=True)
+            with open(modpack_version_file, "w") as file:
+                file.write(_version_client_)
+
         mods_path = os.path.join(mc_path, 'mods')
         if os.path.exists(mods_path):
             print('Warning: It needs to clear the folder. Do you want to backup your old mods? Y/N')
@@ -74,16 +94,33 @@ def version_checker(latest, present):
         print("Invalid version format. Please provide valid version numbers.")
 
 
+def version_updater(version):
+    if os.path.exists(modpack_version_file):
+        with open(modpack_version_file, "w") as file:
+            file.write(version)
+
+
+def read_modpack_version():
+    try:
+        with open(modpack_version_file, "r") as file:
+            version = file.read().strip()  # Strip to remove leading/trailing whitespaces
+            return version
+    except FileNotFoundError:
+        print(f"File not found: {modpack_version_file}")
+        return None
+    except Exception as e:
+        print(f"An error occurred while reading the modpack version file: {e}")
+        return None
+
+
 if __name__ == "__main__":
-    mcchecker_path = choose_minecraft_path()
     if not mc_path:
         print("No Minecraft path selected. Exiting.")
     else:
-        mods_path = check_mc(mcchecker_path)
-
+        mods_path = check_mc(mc_path)
         versionmodpack_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modpackversion'  # Replace with the actual URL of the text file
         latest_version = version_modpack(versionmodpack_url)
-        present_version = '1.1'
+        present_version = _version_
         version_checker(latest_version, present_version)
 
         versionloader_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modversion.zip'  # Version of game exam fabric version 1.20.1
@@ -94,7 +131,7 @@ if __name__ == "__main__":
         check = input().lower()  # Convert input to lowercase for case-insensitive comparison
 
         if check == 'y':
-            print('Create a Profile Part')
+            print('-Create a Profile Part-')
             print('Enter Your Profile Name')
             json_file_path = os.path.join(os.environ['APPDATA'], '.minecraft', 'launcher_profiles.json')
             profile_id = 'bfc89f1e92619f7ecca11732017a4e33'
@@ -109,13 +146,18 @@ if __name__ == "__main__":
             print('Invalid input. Please enter Y or N.')
 
         mod_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modfile.zip'
+        print('-Download Modpack Part-')
+        print(f'Your modpack version is {read_modpack_version()} latest version is {latest_version}')
+        print('Do you want to download modpack? Y/N')
         downloadcheck = input().lower()
         if downloadcheck == 'y':
             print('Downloading a Mod.')
             versioncheck.download_and_extract(mod_url, mc_path, mods_path)
+            version_updater(latest_version)
         elif downloadcheck == 'n':
-            print('skip loading mod')
-        else :
-            print('invalid input.')
-        print(f'Finish!! Enjoy Your Game.Modpack version {latest_version}')
+            print('skip loading mod nothing have download')
+        else:
+            print('invalid input Fail! to download.')
+        print(f'Your ModPack version is {read_modpack_version()}')
+        print(f'Finish!! Enjoy Your Game.')
     pass
