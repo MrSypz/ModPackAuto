@@ -33,7 +33,6 @@ def check_mc(mc_path):
             try:
                 with open(modpack_version_file, "r") as file:
                     content = file.read()
-                    print(content)
             except FileNotFoundError:
                 print(f"File not found: {modpack_version_file}")
             except Exception as e:
