@@ -77,22 +77,6 @@ def version_modpack(url):
         return None
 
 
-def version_checker(latest, present):
-    try:
-        present_float = float(present)
-        latest_float = float(latest)
-
-        if present_float == latest_float:
-            print(f'Your ModUpdator version is the latest: {latest}')
-        elif present_float < latest_float:
-            print(f'Your ModUpdator version is not up to date. Latest version is: {latest} pls update your modpack.')
-
-        else:
-            print(f'Your ModUpdator version is ahead of the latest: {present} that mean this one is impossible!!')
-    except ValueError:
-        print("Invalid ModUpdator version format. Please provide valid version numbers.")
-
-
 def version_updater(version):
     if os.path.exists(modpack_version_file):
         with open(modpack_version_file, "w") as file:
@@ -119,8 +103,6 @@ if __name__ == "__main__":
         mods_path = check_mc(mc_path)
         versionmodpack_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modpackversion'  # Replace with the actual URL of the text file
         latest_version = version_modpack(versionmodpack_url)
-        present_version = _version_
-        version_checker(latest_version, present_version)
 
         versionloader_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modversion.zip'  # Version of game exam fabric version 1.20.1
         versioncheck.check_and_download_folder(verions, versionloader_url, verions_path)
