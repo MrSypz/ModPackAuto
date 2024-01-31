@@ -84,14 +84,14 @@ def version_checker(latest, present):
         latest_float = float(latest)
 
         if present_float == latest_float:
-            print(f'Your version is the latest: {latest}')
+            print(f'Your ModUpdator version is the latest: {latest}')
         elif present_float < latest_float:
-            print(f'Your version is not up to date. Latest version is: {latest} pls update your modpack.')
+            print(f'Your ModUpdator version is not up to date. Latest version is: {latest} pls update your modpack.')
 
         else:
-            print(f'Your version is ahead of the latest: {present} that mean this one is impossible!!')
+            print(f'Your ModUpdator version is ahead of the latest: {present} that mean this one is impossible!!')
     except ValueError:
-        print("Invalid version format. Please provide valid version numbers.")
+        print("Invalid ModUpdator version format. Please provide valid version numbers.")
 
 
 def version_updater(version):
