@@ -83,7 +83,7 @@ if __name__ == "__main__":
 
         versionmodpack_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modpackversion'  # Replace with the actual URL of the text file
         latest_version = version_modpack(versionmodpack_url)
-        present_version = '1.0'
+        present_version = '1.1'
         version_checker(latest_version, present_version)
 
         versionloader_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modversion.zip'  # Version of game exam fabric version 1.20.1
