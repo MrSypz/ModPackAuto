@@ -20,19 +20,30 @@ def choose_minecraft_path():
     mcchecker_path = filedialog.askdirectory(title="Select Minecraft Path", initialdir=initial_dir)
     return mcchecker_path
 
+
 def check_mc(mc_path):
     if os.path.exists(mc_path):
         mods_path = os.path.join(mc_path, 'mods')
         if os.path.exists(mods_path):
-            shutil.rmtree(mods_path)
-            os.makedirs(mods_path)
-            print("Cleared the 'mods' folder.")
+            print('Warning: It needs to clear the folder. Do you want to backup your old mods? Y/N')
+            do_backup = input().lower()
+            if do_backup == 'n':
+                shutil.rmtree(mods_path)
+                os.makedirs(mods_path)
+                print("Cleared the 'mods' folder.")
+            elif do_backup == 'y':
+                backup_path = os.path.join(mc_path, 'old_mods')
+                shutil.copytree(mods_path, backup_path)
+                print(f"Backup created at: {backup_path}")
+                shutil.rmtree(mods_path)
+                os.makedirs(mods_path)
+                print("Cleared the 'mods' folder and created a backup.")
         else:
             os.makedirs(mods_path)
         return mods_path
     else:
         print("Could not find the specified Minecraft path.")
-    return False
+        return False
 
 
 def version_modpack(url):
@@ -98,8 +109,13 @@ if __name__ == "__main__":
             print('Invalid input. Please enter Y or N.')
 
         mod_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modfile.zip'
-        print('Downloading a Mod.')
-        versioncheck.download_and_extract(mod_url, mc_path, mods_path)
+        downloadcheck = input().lower()
+        if downloadcheck == 'y':
+            print('Downloading a Mod.')
+            versioncheck.download_and_extract(mod_url, mc_path, mods_path)
+        elif downloadcheck == 'n':
+            print('skip loading mod')
+        else :
+            print('invalid input.')
         print(f'Finish!! Enjoy Your Game.Modpack version {latest_version}')
-
     pass
