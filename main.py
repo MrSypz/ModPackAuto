@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import filedialog
 
 import customprofile
-import versioncheck
+import filehandler
 
 
 def choose_minecraft_path():
@@ -105,7 +105,7 @@ if __name__ == "__main__":
         latest_version = version_modpack(versionmodpack_url)
 
         versionloader_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modversion.zip'  # Version of game exam fabric version 1.20.1
-        versioncheck.check_and_download_folder(verions, versionloader_url, verions_path)
+        filehandler.check_and_download_folder(verions, versionloader_url, verions_path)
 
         print('Half Way Done!!')
         print('Do you want to create new profile(First time use request to create) Y/N')
@@ -133,7 +133,7 @@ if __name__ == "__main__":
         downloadcheck = input().lower()
         if downloadcheck == 'y':
             print('Downloading a Mod.')
-            versioncheck.download_and_extract(mod_url, mc_path, mods_path)
+            filehandler.download_and_extract(mod_url, mc_path, mods_path)
             version_updater(latest_version)
         elif downloadcheck == 'n':
             print('skip loading mod nothing have download')
