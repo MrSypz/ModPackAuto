@@ -97,19 +97,31 @@ def read_modpack_version():
 
 
 if __name__ == "__main__":
+    mod_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modfile.zip'
     if not mc_path:
         print("No Minecraft path selected. Exiting.")
     else:
         mods_path = check_mc(mc_path)
-        versionmodpack_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modpackversion'  # Replace with the actual URL of the text file
+        versionmodpack_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modpackversion'
         latest_version = version_modpack(versionmodpack_url)
 
-        versionloader_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modversion.zip'  # Version of game exam fabric version 1.20.1
+        versionloader_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modversion.zip'
         filehandler.check_and_download_folder(verions, versionloader_url, verions_path)
 
         print('Half Way Done!!')
-        print('Do you want to create new profile(First time use request to create) Y/N')
-        check = input().lower()  # Convert input to lowercase for case-insensitive comparison
+
+
+        # Function to validate input for creating a profile
+        def validate_profile_input():
+            while True:
+                check = input('Do you want to create a new profile? (Y/N): ').lower()
+                if check in {'y', 'n'}:
+                    return check
+                else:
+                    print('Invalid input. Please enter Y or N.')
+
+
+        check = validate_profile_input()
 
         if check == 'y':
             print('-Create a Profile Part-')
@@ -121,24 +133,29 @@ if __name__ == "__main__":
             profile_type = 'custom'
 
             customprofile.add_custom_profile(json_file_path, profile_id, profile_name, profile_version_id, profile_type)
-        elif check == 'n':
-            print('Skip creating a profile part.')
         else:
-            print('Invalid input. Please enter Y or N.')
+            print('Skipping the profile creation part.')
 
-        mod_url = 'https://raw.githubusercontent.com/MrSypz/ModPackAuto/main/container/modfile.zip'
-        print('-Download Modpack Part-')
-        print(f'Your modpack version is {read_modpack_version()} latest version is {latest_version}')
-        print('Do you want to download modpack? Y/N')
-        downloadcheck = input().lower()
-        if downloadcheck == 'y':
+
+        # Function to validate input for downloading the modpack
+        def validate_modpack_download():
+            while True:
+                downloadcheck = input('Do you want to download modpack? (Y/N): ').lower()
+                if downloadcheck in {'y', 'n'}:
+                    return downloadcheck
+                else:
+                    print('Invalid input. Please enter Y or N.')
+
+
+        if validate_modpack_download() == 'y':
+            print('-Download Modpack Part-')
+            print(f'Your modpack version is {read_modpack_version()} latest version is {latest_version}')
             print('Downloading a Mod.')
             filehandler.download_and_extract(mod_url, mc_path, mods_path)
             version_updater(latest_version)
-        elif downloadcheck == 'n':
-            print('skip loading mod nothing have download')
         else:
-            print('invalid input Fail! to download.')
+            print('Skipping the modpack download part.')
+            print('You didn\'t download anything why?')
+
         print(f'Your ModPack version is {read_modpack_version()}')
         print(f'Finish!! Enjoy Your Game.')
-    pass
